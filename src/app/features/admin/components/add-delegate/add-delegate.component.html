@@ -1,0 +1,300 @@
+    <div class="wrapper d-flex align-items-stretch">
+      <app-admin-left-panel></app-admin-left-panel>
+
+      <div id="content" style="overflow-y: auto; overflow-x: hidden">
+        <div class="container-fluid" id="pagecontent">
+          <div class="card" id="uppercard">
+            <div class="card-body">
+              <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
+
+                <div class="col-md-12 border-bottom mb-3">
+                  <h4 style="display: inline-flex">Add Delegate</h4>
+                </div>
+                <!-- Personal Information Section -->
+                <div class="card mb-3">
+                  <div class="card-header"><strong>Personal Information</strong></div>
+                  <div class="card-body">
+                    <!-- Title -->
+                    <div class="row">
+                      <div class="form-group col-md-4 mb-3">
+                        <label for="title">Title <span class="text-danger">*</span></label>
+                        <input type="text" id="title" class="form-control" formControlName="title" (keypress)="titleValidateAlpha($event)"/>
+                        <div *ngIf="registrationForm.get('title')?.touched && (registrationForm.get('title')?.invalid || registrationForm.get('title').errors?.leadingTrailingSpaces)" class="text-danger">
+                          Title is required and should be at most 15 characters.
+                        </div>
+                      </div>
+                
+                      <!-- First Name -->
+                      <div class="form-group col-md-4 mb-3">
+                        <label for="first_name">First Name <span class="text-danger">*</span></label>
+                        <input type="text" id="first_name" class="form-control" formControlName="first_name" />
+                        <div *ngIf="registrationForm.get('first_name')?.touched && (registrationForm.get('first_name')?.invalid || registrationForm.get('first_name').errors?.leadingTrailingSpaces)" class="text-danger">
+                          First Name is required (Min 3, Max 115 characters).
+                        </div>
+                      </div>
+                
+                      <!-- Last Name -->
+                      <div class="form-group col-md-4 mb-3">
+                        <label for="last_name">Last Name <span class="text-danger">*</span></label>
+                        <input type="text" id="last_name" class="form-control" formControlName="last_name" />
+                        <div *ngIf="registrationForm.get('last_name')?.touched && (registrationForm.get('last_name')?.invalid || registrationForm.get('last_name').errors?.leadingTrailingSpaces)" class="text-danger">
+                          Last Name is required (Min 2, Max 115 characters).
+                        </div>
+                      </div>
+                
+                      <!-- Date of Birth -->
+                      <div class="form-group col-md-4 mb-3">
+                        <label for="dob">Date of Birth <span class="text-danger">*</span></label>
+                        <input type="date" id="dob" class="form-control" formControlName="dob" [max]="maxDate" />
+                        <div *ngIf="registrationForm.get('dob')?.touched && registrationForm.get('dob')?.invalid" class="text-danger">
+                          Date of Birth is required.
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              
+                <!-- Contact Information Section -->
+                <div class="card mb-3">
+                  <div class="card-header"><strong>Contact Information</strong></div>
+                  <div class="card-body">
+                    <!-- Mobile Number -->
+                    <div class="row">
+                      <div class="form-group col-md-4 mb-3">
+                        <label for="pocMobile">Mobile Number <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                          <div class="row">
+                            <div class="input-group-prepend col-md-3">
+                              <select class="form-control" formControlName="countryCode">
+                                <option *ngFor="let code of countryCode" [value]="code['codeStr']">{{code['country_mobile_code']}}</option>
+                              </select>
+                            </div>
+<!-- 
+                            <div class="input-group-append col-md-1">
+                              <span class="input-group-text" style="border: none; background: transparent;"> </span>
+                            </div> -->
+                            <!-- Mobile Number Input -->
+                            <div class="input-group-append col-md-9">
+                              <input type="text" id="pocMobile" class="form-control" formControlName="pocMobile"/>
+                            </div>
+                          </div>
+                        </div>
+                        <div *ngIf="registrationForm.get('countryCode')?.touched && registrationForm.get('countryCode')?.errors?.required" class="text-danger">
+                          Country Code is required
+                        </div>
+
+                        <div *ngIf="registrationForm.get('pocMobile')?.touched && registrationForm.get('pocMobile')?.invalid" class="text-danger">
+                          Enter a valid mobile number.
+                        </div>
+                      </div>
+                
+                      <!-- Email -->
+                      <div class="form-group col-md-4 mb-3">
+                        <label for="email_id">Email Id <span class="text-danger">*</span></label>
+                        <input type="email" id="email_id" class="form-control" formControlName="email_id" />
+                        <div *ngIf="registrationForm.get('email_id').errors?.required && registrationForm.get('email_id').touched" class="error text-danger">
+                          Email is required
+                        </div>
+                        <div *ngIf="registrationForm.get('email_id')?.touched && registrationForm.get('email_id').errors?.invalidEmail" class="text-danger">
+                          Enter a valid email address.
+                        </div>
+                      </div>
+
+                      <div class="form-group col-md-4 mb-3">
+                        <label for="LinkedInId">LinkedIn Profile</label>
+                        <input type="text" id="LinkedInId" class="form-control" formControlName="linkedIn" />
+                        <div *ngIf="registrationForm.get('linkedIn')?.touched && registrationForm.get('linkedIn')?.invalid" class="text-danger">
+                          Maximum 150 characters allowed.
+                        </div>
+                      </div>
+                
+                      <!-- Profession 2 -->
+                      <div class="form-group col-md-4 mb-3">
+                        <label for="InstagramID">Instagram ID</label>
+                        <input type="text" id="InstagramID" class="form-control" formControlName="instagram" />
+                        <div *ngIf="registrationForm.get('instagram')?.touched && registrationForm.get('instagram')?.invalid" class="text-danger">
+                          Maximum 150 characters allowed.
+                        </div>
+                      </div>
+                    </div>
+                    </div>
+                </div>
+              
+                <!-- Professional Information Section -->
+                <div class="card mb-3">
+                  <div class="card-header"><strong>Professional Information</strong></div>
+                  <div class="card-body">
+                    <!-- Profession 1 -->
+                    <div class="row">
+                    <div class="form-group col-md-4 mb-3">
+                      <label for="profession_1">Profession 1 <span class="text-danger">*</span></label>
+                      <input type="text" id="profession_1" class="form-control" formControlName="profession_1" />
+                      <div *ngIf="registrationForm.get('profession_1')?.touched && (registrationForm.get('profession_1')?.invalid || registrationForm.get('profession_1').errors?.leadingTrailingSpaces)" class="text-danger">
+                        Profession 1 is required (Min 2, Max 150 characters).
+                      </div>
+                    </div>
+              
+                    <!-- Profession 2 -->
+                    <div class="form-group col-md-4 mb-3">
+                      <label for="profession_2">Profession 2 (if any)</label>
+                      <input type="text" id="profession_2" class="form-control" formControlName="profession_2" />
+                      <div *ngIf="registrationForm.get('profession_2')?.touched && registrationForm.get('profession_2')?.invalid" class="text-danger">
+                        Maximum 150 characters allowed.
+                      </div>
+                    </div>
+
+                    <div class="form-group col-md-4 mb-3">
+                      <label for="website">Website</label>
+                      <input type="text" id="website" class="form-control" formControlName="website" />
+                      <div *ngIf="registrationForm.get('website')?.touched && registrationForm.get('website')?.invalid" class="text-danger">
+                        Maximum 150 characters allowed.
+                      </div>
+                    </div>
+              
+                    <!-- Profession 2 -->
+                    <div class="form-group col-md-4 mb-3">
+                      <label for="orgName">Organization Name</label>
+                      <input type="text" id="orgName" class="form-control" formControlName="orgName" />
+                      <div *ngIf="registrationForm.get('orgName')?.touched && registrationForm.get('orgName')?.invalid" class="text-danger">
+                        Maximum 150 characters allowed.
+                      </div>
+                    </div>
+
+                    </div>
+              </div>
+            </div>
+          
+            <!-- Address Details Section -->
+            <div class="card mb-3">
+              <div class="card-header"><strong>Address Details</strong></div>
+              <div class="card-body">
+                <!-- Country -->
+                 <div class="row">
+                <div class="form-group col-md-4 mb-3">
+                  <label for="country">Country <span class="text-danger">*</span></label>
+                  <select formControlName="country" (change)="onCountryChange($event)" class="form-control" aria-label="Default select example">
+                    <option value="">Select Country</option>
+                    <option *ngFor="let country of countries" [value]="country['id']" [attr.data-name]="country['name']" [attr.data-code]="country['iso2']">{{country['name']}}</option>
+                  </select>
+                  <div *ngIf="registrationForm.get('country')?.touched && registrationForm.get('country')?.invalid" class="text-danger">
+                    Country is required.
+                  </div>
+                </div>
+          
+                <!-- State -->
+                <div class="form-group col-md-4 mb-3">
+                  <label for="state">State/Province <span class="text-danger">*</span></label>
+                  <select formControlName="state" (change)="onStateChange($event)" class="form-control" aria-label="Default select example">
+                    <option value="">Select State</option>
+                    <option *ngFor="let state of states" [value]="state['id']" [attr.data-name]="state['name']">{{state['name']}}</option>
+                  </select>
+                  <div *ngIf="registrationForm.get('state')?.touched && registrationForm.get('state')?.invalid" class="text-danger">
+                    State is required.
+                  </div>
+                </div>
+          
+                <!-- City -->
+                <div class="form-group col-md-4 mb-3">
+                  <label for="city">City <span class="text-danger">*</span></label>
+                  <select formControlName="city" (change)="onCityChange($event)" class="form-control" aria-label="Default select example">
+                    <option value="">Select City</option>
+                    <option *ngFor="let city of cities" [value]="city['id']" [attr.data-name]="city['name']">{{city['name']}}</option>
+                  </select>
+                  <div *ngIf="registrationForm.get('city')?.touched && registrationForm.get('city')?.invalid" class="text-danger">
+                    City is required.
+                  </div>
+                </div>
+
+                <div class="form-group col-md-4 mb-3">
+                  <label for="Address" class="form-label">Address</label>
+                <input type="text" formControlName="address" class="form-control" id="Address" aria-describedby="emailHelp">
+                </div>
+                </div>
+              </div>
+            </div>
+          
+            <!-- Reference Code Section -->
+            <!-- <div class="card mb-3">
+              <div class="card-header"><strong>Reference Code</strong></div>
+              <div class="card-body">
+                <p>The payment link (USD 2800) will be shared after submission of this form.</p>
+                <div class="row">
+                <div class="form-group col-md-4 mb-3">
+                  <label for="reference_no">Reference Number:</label>
+                  <input type="text" id="reference_no" class="form-control" formControlName="reference_no" />
+                  <div *ngIf="registrationForm.get('reference_no')?.touched && registrationForm.get('reference_no')?.invalid" class="text-danger">
+                    Reference number should be between 3 and 50 characters.
+                  </div>
+                </div>
+                </div>
+              </div>
+            </div> -->
+          
+
+            <!-- Attendee Purpose Section -->
+            <div class="card mb-3">
+              <div class="card-header"><strong>Attendee Purpose</strong></div>
+              <div class="card-body">
+                <p>What is your primary purpose of attending this Summit? <span class="text-danger">*</span></p>
+                <div class="form-check" *ngFor="let option of [
+                    { label: 'Gathering Knowledge', value: '0' },
+                    { label: 'Networking', value: '1' },
+                    { label: 'Speaker Profile', value: '2' },
+                    { label: 'Working for Peace', value: '3' },
+                    { label: 'Other', value: '4' }
+                  ]">
+                  <input 
+                    class="form-check-input"
+                    type="radio"
+                    [value]="option.value"
+                    formControlName="attendee_purpose"
+                    [id]="'attendee_' + option.value"
+                  />
+                  <label class="form-check-label" [for]="'attendee_' + option.value">
+                    {{ option.label }}
+                  </label>
+                </div>
+                <div *ngIf="registrationForm.get('attendee_purpose')?.touched && registrationForm.get('attendee_purpose')?.invalid" class="text-danger">
+                  Please select your purpose.
+                </div>
+              </div>
+            </div>
+          
+            <!-- Conference Interests Section -->
+            <div class="card mb-3" formGroupName="conference_interest">
+              <div class="card-header"><strong>Conference Interests</strong></div>
+              <div class="card-body">
+                <p>Which of the 3 levers of the conference interests you the most? <span class="text-danger">*</span></p>
+                <div class="form-check">
+                  <input type="checkbox" id="justice" class="form-check-input" formControlName="justice" 
+                    [formControl]="justiceControl" />
+                  <label class="form-check-label" for="justice">Justice</label>
+                </div>
+                <div class="form-check">
+                  <input type="checkbox" id="love" class="form-check-input" formControlName="love" 
+                    [formControl]="loveControl" />
+                  <label class="form-check-label" for="love">Love</label>
+                </div>
+                <div class="form-check">
+                  <input type="checkbox" id="peace" class="form-check-input" formControlName="peace" 
+                    [formControl]="peaceControl" />
+                  <label class="form-check-label" for="peace">Peace</label>
+                </div>
+
+                <div *ngIf="registrationForm.get('conference_interest')?.touched && registrationForm.get('conference_interest')?.errors?.atLeastOneRequired" class="text-danger">
+                  Please select at least one conference interest.
+                </div>
+              </div>
+            </div>
+          
+            <!-- Submit Button -->
+            <div class="text-center">
+              <button type="submit" class="btn btn-success">Submit</button>
+              <button type="button" class="btn btn-danger mx-3" (click)="onCancel()">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

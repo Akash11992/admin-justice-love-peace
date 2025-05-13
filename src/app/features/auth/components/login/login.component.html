@@ -1,0 +1,110 @@
+<!-- new html code -->
+
+<div class="main-container">
+  <img class="wave" src="assets/UIComponents/images/wave.png">
+  
+  <div class="container">
+    <div class="img">
+      <img src="assets/UIComponents/images/login_logo.svg">
+    </div>
+
+    <div class="loginBox">
+      <div class="login-box">
+
+    <div class="login-content">
+      <form  [formGroup]="loginForm"
+      novalidate
+      (ngSubmit)="onLogin()">
+        <img src="assets/UIComponents/images/avatar.svg">
+        <h2 class="title">Welcome</h2>
+        <div class="input-div one">
+          <div class="i">
+            <i class="fa fa-user"></i>
+          </div>
+          <div class="div">
+            <h5>Username</h5>
+            <input type="text" class="input"formControlName="email"
+            name="email"
+            maxlength="40"
+            [ngClass]="{
+              errors:
+                getcontrol('email')?.errors && getcontrol('email')?.touched
+            }">
+          </div>
+        </div>
+        <div class="d-flex"
+        *ngIf="getcontrol('email')?.errors && getcontrol('email')?.touched"
+      >
+        <small
+          class="text-danger"
+          *ngIf="getcontrol('email')?.errors?.['required']"
+          >Email is Required.</small
+        >
+        <small
+          class="text-danger"
+          *ngIf="getcontrol('email')?.errors?.['email']"
+          >Please enter valid email address.</small
+        >
+      </div>
+        <div class="input-div pass">
+          <div class="i"> 
+            <i class="fa fa-lock"></i>
+          </div>
+          <div class="div">
+            <h5>Password</h5>
+            <input [type]="type" class="input" formControlName="password"
+            name="password"
+            maxlength="30"
+            [ngClass]="{
+              errors:
+                getcontrol('password')?.errors &&
+                getcontrol('password')?.touched
+            }"
+          />
+          <span
+            (click)="hideShowPass()"
+            style="position: absolute; bottom: 10px; float: right; right: 5px;font-size: large;"
+            class=" fa {{ eyeIcon }}"
+          >
+        </span>
+          </div>
+        </div>
+        <div class="d-flex"
+        *ngIf="
+          getcontrol('password')?.errors && getcontrol('password')?.touched
+        "
+      >
+        <small
+          class="text-danger"
+          *ngIf="getcontrol('password')?.errors?.['required']"
+          >Password Required.</small
+        >
+        <small
+          class="text-danger"
+          *ngIf="getcontrol('password')?.errors?.['pattern']"
+        >
+          The password must contain one or more lowercase characters numeric
+          values and uppercase characters.</small
+        >
+      </div>
+        <!-- <a routerLink="/forgot-password">Forgot Password?</a> -->
+        <input type="submit" class="btn" value="Login">
+      </form>
+    </div>
+
+      </div>
+    </div>
+  </div>
+  
+
+
+</div>
+
+
+
+
+
+
+
+
+

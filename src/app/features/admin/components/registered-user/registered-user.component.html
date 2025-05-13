@@ -1,0 +1,378 @@
+<!------------------------------------------- Sidebar start---------------------------------------------->
+<div class="wrapper d-flex align-items-stretch">
+  <app-admin-left-panel></app-admin-left-panel>
+  <!------------------------------------------- Sidebar end---------------------------------------------->
+
+  <!------------------------------------------ bodyheader start ----------------------------------------->
+  <div id="content" style="overflow-y: auto; overflow-x: hidden">
+    <!------------------------------------------ bodyheader end ---------------------------------------->
+
+    <!------------------------------------------ Page Content -------------------------------------------->
+    <div class="container-fluid" id="pagecontent">
+      <div class="col-md-12 px-0" style="padding-top: 25px">
+        <img src="assets/images/user (1).png" id="userimg" />&nbsp;  &nbsp;
+        <h4 style="display: inline-flex">Delegate List {{sponsorshipId ? '('+sponsorshipName+')' : ''}}</h4>
+      </div>
+
+      <div class="card" id="uppercard">
+        <div class="card-body">
+          
+
+          <div class="row">
+            <div class="col-md-8">
+
+              <form>
+                <div class="row">
+                  <div class="col-md-3">
+                    <select #mySelect (change)="onSelectionChange(mySelect.value)"  style="cursor: pointer;" class="form-control" aria-label="Default select example">
+                      <option *ngFor="let option of rowOptions" [value]="option.value">{{ option.label }}</option>
+                    </select>
+                  </div>
+                  <div class="col-md-3">
+                    <select #selectType (change)="onTypeSelectionChange(selectType.value)"  style="cursor: pointer;" class="form-control" aria-label="Default select example">
+                      <option *ngFor="let type of typeOptions" [value]="type.value">{{ type.label }}</option>
+                    </select>
+                  </div>
+                  <div class="col-md-6 d-flex">
+                    <input   #searchInput
+                    class="form-control"
+                    type="search"
+                    id="inputsearch"
+                    maxlength="60"
+                    placeholder="Search..."  (input)="preventFirstSpace(searchInput)"
+                    aria-label="Search" type="search" id="inputsearch"
+              placeholder="Search..." aria-label="Search">&nbsp;&nbsp;
+            <button class="btn "  (click)="onSearchClick(searchInput.value)" id="btncolor">Search</button>
+            &nbsp; &nbsp;
+            <button class="btn " (click)="onSearchClick('')" type="reset" id="btncolor">Reset</button>
+                  </div>
+                </div>
+                
+                
+              </form>
+
+
+            </div>
+            <div class="col-md-4" id="exportcolmd">
+              <!--  <button
+                class="btn"
+                type="button"
+                id="exportbtn"
+                [routerLink]="['/dashboard/delegate-registration',sponsorshipId]"
+                *ngIf="isFromSponsorship"
+              >
+                <i class="bi bi-plus"></i> Add Delegate
+              </button> &nbsp; -->
+              <!-- <button
+                class="btn"
+                type="button"
+                id="exportbtn"
+                routerLink="/dashboard/add-delegate-by-file"
+              >
+                <i class="bi bi-plus"></i> Add delegate by file
+              </button> &nbsp; -->
+              <button class="btn" type="button" id="exportbtn" (click)="export()">
+                <i class="bi bi-file-earmark-excel"></i> Export
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row m-1" *ngIf="registeredDelegateList.length > 0 else noDataTemplate;">
+        <div class="col-md-12 row">
+          <div class="col-sm-10">
+            <p>
+              * Data will be auto refreshed in every 60 secs
+              <img *ngIf="isSpinner == 1" src="assets/UIComponents/images/loading.gif"width="2%" alt="Loading">
+
+            </p>
+          </div>
+
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-body p-0">
+              <div class="table-responsive" *ngIf="registeredDelegateList.length > 0">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th><input
+                        type="checkbox" 
+                                [(ngModel)]="masterSelected" 
+                                (change)="checkUncheckAll()"
+                      /></th>
+                      <th>SN</th>
+                      <th (click)="onSort('full_name')" [ngStyle]="sortBy === 'full_name'?{'cursor': 'pointer'}:{}">Name 
+                          <i class="bi bi-caret-up-fill" *ngIf="sortBy === 'full_name' && order === 'asc'"></i>
+                          <i class="bi bi-caret-down-fill" *ngIf="sortBy === 'full_name' && order === 'desc'"></i>  
+                        </th>
+                      <th (click)="onSort('dob')"  [ngStyle]="sortBy === 'dob'?{'cursor': 'pointer'}:{}">DOB
+                        <i class="bi bi-caret-up-fill" *ngIf="sortBy === 'dob' && order === 'asc'"></i>
+                        <i class="bi bi-caret-down-fill" *ngIf="sortBy === 'dob' && order === 'desc'"></i>
+                       </th>
+                      <th (click)="onSort('email')"  [ngStyle]="sortBy === 'email'?{'cursor': 'pointer'}:{}">Email 
+                        <i class="bi bi-caret-up-fill" *ngIf="sortBy === 'email' && order === 'asc'"></i>
+                        <i class="bi bi-caret-down-fill" *ngIf="sortBy === 'email' && order === 'desc'"></i>                     
+                       </th>
+                      <th  (click)="onSort('mobile_no')"  [ngStyle]="sortBy === 'mobile_no'?{'cursor': 'pointer'}:{}">Mobile
+                        <i class="bi bi-caret-up-fill" *ngIf="sortBy === 'mobile_no' && order === 'asc'"></i>
+                        <i class="bi bi-caret-down-fill" *ngIf="sortBy === 'mobile_no' && order === 'desc'"></i>
+                       </th>
+                      <th (click)="onSort('country_name')"  [ngStyle]="sortBy === 'country_name'?{'cursor': 'pointer'}:{}">country
+                        <i class="bi bi-caret-up-fill" *ngIf="sortBy === 'country_name' && order === 'asc'"></i>
+                        <i class="bi bi-caret-down-fill" *ngIf="sortBy === 'country_name' && order === 'desc'"></i>
+                       </th>
+                      <th  (click)="onSort('profession')"  [ngStyle]="sortBy === 'profession'?{'cursor': 'pointer'}:{}">Profession
+                        <i class="bi bi-caret-up-fill" *ngIf="sortBy === 'profession' && order === 'asc'"></i>
+                        <i class="bi bi-caret-down-fill" *ngIf="sortBy === 'profession' && order === 'desc'"></i>
+                       </th>
+                      <th  (click)="onSort('organization_name')"  [ngStyle]="sortBy === 'organization_name'?{'cursor': 'pointer'}:{}">Organization Name
+                        <i class="bi bi-caret-up-fill" *ngIf="sortBy === 'organization_name' && order === 'asc'"></i>
+                        <i class="bi bi-caret-down-fill" *ngIf="sortBy === 'organization_name' && order === 'desc'"></i>
+                       </th>
+                      <th  (click)="onSort('TUD_STATUS')"  [ngStyle]="sortBy === 'TUD_STATUS'?{'cursor': 'pointer'}:{}">Payment Status 
+                        <i class="bi bi-caret-up-fill" *ngIf="sortBy === 'TUD_STATUS' && order === 'asc'"></i>
+                        <i class="bi bi-caret-down-fill" *ngIf="sortBy === 'TUD_STATUS' && order === 'desc'"></i>
+                       </th>
+                       <th  (click)="onSort('is_complete')"  [ngStyle]="sortBy === 'is_complete'?{'cursor': 'pointer'}:{}">Profile Status 
+                        <i class="bi bi-caret-up-fill" *ngIf="sortBy === 'is_complete' && order === 'asc'"></i>
+                        <i class="bi bi-caret-down-fill" *ngIf="sortBy === 'is_complete' && order === 'desc'"></i>
+                       </th>
+                      <th  (click)="onSort('TUD_TRANSCATION_ID')"  [ngStyle]="sortBy === 'TUD_TRANSCATION_ID'?{'cursor': 'pointer'}:{}">Payment Transaction Id  
+                        <i class="bi bi-caret-up-fill" *ngIf="sortBy === 'TUD_TRANSCATION_ID' && order === 'asc'"></i>
+                        <i class="bi bi-caret-down-fill" *ngIf="sortBy === 'TUD_TRANSCATION_ID' && order === 'desc'"></i>                     
+                      </th>
+                      <th>Reference</th>
+                      <th (click)="onSort('created_at')"  [ngStyle]="sortBy === 'created_at'?{'cursor': 'pointer'}:{}">Registered At
+                        <i class="bi bi-caret-up-fill" *ngIf="sortBy === 'created_at' && order === 'asc'"></i>
+                        <i class="bi bi-caret-down-fill" *ngIf="sortBy === 'created_at' && order === 'desc'"></i>
+                       </th>
+                      <th [ngClass]="{'d-lg-none':!userPermissions.update}">Action</th>
+
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let all of registeredDelegateList; let i = index">
+                      <td>
+                        <input
+                        type="checkbox" 
+                        [(ngModel)]="all.selected" 
+                        (change)="isAllSelected()"
+                        />
+                      </td>
+                      <td>{{ i + 1 }}</td>
+                      <td>
+                        {{ all.full_name }}
+                      </td>
+                      <td>{{all.dob | date:'dd-MM-yyyy'}}</td>
+
+                      <td>
+                        <span style="
+                              display: block;
+                              text-overflow: ellipsis;
+                              overflow: hidden;
+                              white-space: nowrap;
+                              width: 230px;
+                             ">{{all.email}} <i class="bi bi-person-fill"></i></span>
+                      </td>
+                      <td>{{ all.mobile_no }}</td>
+                      <td>{{ all.country_name }}</td>
+                      <td>{{ all.profession }}</td>
+                      <td>{{ all.organization_name }}</td>
+                      <td
+                        [ngClass]="
+                          all.TUD_STATUS == 'paid' || all.TUD_STATUS == 'paid-online'  || all.TUD_STATUS == 'APPROVED' ? 'success' : 'pending'
+                        "
+                      >
+                        {{ all.TUD_STATUS == "paid" || all.TUD_STATUS == "paid-online"  || all.TUD_STATUS == "APPROVED" ? "SUCCESS" : "PENDING" }}
+                      </td>
+                      <td>
+                        {{
+                          all.is_complete == 1
+                            ? 'Complete' : 'Incomplete'
+                            
+                        }}
+                      </td>
+                      <td>
+                        {{
+                          all.TUD_TRANSCATION_ID
+                            ? all.TUD_TRANSCATION_ID
+                            : "----"
+                        }}
+                      </td>
+                      <td>{{ all.reference_no }}</td>
+                      <td>{{ all.created_at | date:'dd-MM-yyyy, h:mm a' }}</td>
+
+                      <td class="text-right" [ngClass]="{'d-lg-none':!userPermissions.update}"> 
+                        <div class="dropdown dropstart">
+                          <button 
+                            class="btn btn-outline-success"
+                            type="button"
+                            id="dropdownMenuButton1"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                          >
+                            <img
+                              src="/assets/images/orangemenuicon.png"
+                              id="hamburgericon"
+                            />
+                          </button>
+                          <ul
+                            class="dropdown-menu" 
+                            aria-labelledby="dropdownMenuButton1"
+                          >
+                            <li  *ngIf="userPermissions.update"  (click)="onActivateDeactiveToggle(all)">
+                              <a class="dropdown-item" style="cursor: pointer">
+                                {{all.is_active ? 'Deactivate': 'Activate'}}</a
+                              >
+                            </li>
+                            
+                          </ul>
+                        </div>
+                      </td>
+
+
+                      <!-- <td>
+                        <div class="dropdown dropstart">
+                          <button
+                            class="btn btn-outline-success"
+                            type="button"
+                            id="dropdownMenuButton1"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                          >
+                            <img
+                              src="/assets/images/orangemenuicon.png"
+                              id="hamburgericon"
+                            />
+                          </button>
+                          <ul
+                            class="dropdown-menu"
+                            aria-labelledby="dropdownMenuButton1"
+                          >
+                            <!-- <li><a class="dropdown-item" href="#">
+                                              <i class="bi bi-eye-fill" style="cursor: pointer;"></i> View Detail</a></li> -->
+                            <!-- <li><a class="dropdown-item" href="#">
+                                              <i class="bi bi-check2-square"></i> Approve, Register
+                                              & Generate URN</a></li>-->
+
+                            <!-- <li><a class="dropdown-item" style="cursor: pointer;" routerLink="/user/viewdetails/{{all.user_id}}" [queryParams]="{ refer: 'registered-user' }">
+                                                <i class="fa fa-eye" aria-hidden="true" ></i> View Details</a>
+                                            </li>
+                                              <li><a class="dropdown-item" style="cursor: pointer;" routerLink="/user/editdetails/{{all.user_id}}" [queryParams]="{ refer: 'registered-user' }">
+                                                <i class="bi bi-pencil-fill"></i> Edit Details</a>
+                                            </li>
+                                              <li><a class="dropdown-item" style="cursor: pointer;" (click)="downloadBadge(all.filepath,all.urn_no)">
+                                                <i class="bi bi-download"></i> Download Badge</a>
+                                            </li>
+                                      <li><a class="dropdown-item" style="cursor: pointer;" (click)="sendmail(all.user_id,all.title+' '+all.first_name+' '+all.last_name,all.email_id,all.mobile_number,all.qr_code,all.urn_no,all.designation,all.company_name)" >
+                                              <i class="bi bi-envelope-fill"></i> Resend Reg Mail</a></li>
+                                              <li><a class="dropdown-item" style="cursor: pointer;"   (click)="Generate_Badge(all.user_id,all.title+' '+all.first_name+' '+all.last_name,all.email_id,all.mobile_number,all.qr_code,all.urn_no,all.designation,all.company_name)" >
+                                                <i  class="bi bi-file-earmark-pdf-fill"></i> Regenerate Badge</a></li> -->
+                                                <!-- <li>
+                                                  <a 
+                                                    class="dropdown-item"
+                                                    style="cursor: pointer"
+                                                    routerLink="/dashboard/add-delegate"
+                                                  >
+                                                    <i class="bi bi-pencil-fill"></i> Edit Delegate
+                                                    </a
+                                                  >
+                                                </li> -->
+                            <!-- <li>
+                              <a
+                                class="dropdown-item"
+                                style="cursor: pointer"
+                                (click)="
+                                  updateAndUnapprovethroughDropdown(
+                                    all.user_id,
+                                    all.title +
+                                      ' ' +
+                                      all.first_name +
+                                      ' ' +
+                                      all.last_name,
+                                    all.email_id,
+                                    all.mobile_number
+                                  )
+                                "
+                              >
+                                <i class="bi bi-x-lg"></i> Unapprove
+                                Registration</a
+                              >
+                            </li> -->
+                            <!-- <li><a class="dropdown-item" style="cursor: pointer;" (click)="deleteUser(all.user_id,all.title+' '+all.first_name+' '+all.last_name,all.email_id,all.mobile_number)">
+                                              <i class="bi bi-trash3-fill"></i> Delete</a></li> 
+                          </ul>
+                        </div>
+                      </td> -->
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <nav *ngIf="registeredDelegateList.length > 0" aria-label="...">
+                <ul class="pagination">
+                  <li class="page-item " (click)="changePage(page - 1)" [disabled]="page === 1">
+                    <span class="page-link">Previous</span>
+                  </li>
+                  <li class="page-item" *ngFor="let p of [].constructor(totalPages); let i = index" 
+                  (click)="changePage(i + 1)" 
+                  [class.active]="page === i + 1" >
+                  <span class="page-link">{{ i + 1 }}</span>
+                  </li>
+                  <li class="page-item">
+                    <a class="page-link" (click)="changePage(page + 1)" [disabled]="page === totalPages">Next</a>
+                  </li>
+                </ul>
+              </nav>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+      <ng-container *ngIf="isLoading">
+        <div class="table-responsive" >
+          <table class="table">
+            <thead>
+              <tr>
+                <th>SN</th>
+                <th>Name</th>
+                <th>Email </th>
+                <!-- <th>DOB </th> -->
+                <th >Mobile </th>
+                <th >Country</th>
+                <th>Profession</th>
+                <th>Organization Name</th>
+                <th>Payment Status  </th>
+                <th>Payment Transaction Id</th>
+                <th>Reference</th>
+                <th>Registered At</th>
+              </tr>
+            </thead>
+          <tbody>
+            <tr>
+              <td colspan="11">
+                <br>
+                <br>
+                <br>
+                <div class="d-flex justify-content-center no_data">
+                  <img src="assets/UIComponents/images/fetchingdata.svg" alt="" width="150px" />
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+      </ng-container>
+  </div>
+  <!------------------------------------------- Page Content end ----------------------------------------->
+</div>
+
+
+<ng-template #noDataTemplate>
+  <h5  *ngIf="!isLoading" style="text-align: center"><span >No Data Found</span></h5>
+</ng-template>

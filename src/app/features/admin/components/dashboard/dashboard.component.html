@@ -1,0 +1,79 @@
+<!------------------------------------------- Sidebar start---------------------------------------------->
+<div class="wrapper d-flex align-items-stretch">
+  <app-admin-left-panel></app-admin-left-panel>
+  <!------------------------------------------- Sidebar end---------------------------------------------->
+
+  <!------------------------------------------ bodyheader start ----------------------------------------->
+  <div id="content" style="overflow-y: auto; overflow-x: hidden">
+    <!-- class="p-4 p-md-5 "-->
+
+    <!------------------------------------------ bodyheader end ---------------------------------------->
+
+    <!------------------------------------------ Page Content -------------------------------------------->
+    <div id="pagecontent" style="padding: 1%">
+      <h3 class="mb-4">
+        <img src="assets/img/speedmeter1.png" id="speedmeter" /> Dashboard
+      </h3>
+      <div class="row" *ngIf="userPermissions.view">
+        <div class="col-md-6 mt-3">
+          <div class="card" style="padding: 15px">
+            <h4 style="cursor: pointer">Total Registration</h4>
+            <div class="graph">
+              <canvas
+                id="pieChart"
+                style="width: 100px; height: 200px"
+              ></canvas>
+            </div>
+            <!-- <p><a  id="view_graph" style="cursor: pointer;">View List <br> </a></p> -->
+          </div>
+        </div>
+
+        <div class="col-md-6 mt-3">
+          <div class="card" style="padding: 15px">
+            <h4 style="cursor: pointer">Registration By Reference</h4>
+            <div class="graph">
+              <canvas
+                id="donutChart"
+                style="width: 100px; height: 200px"
+              ></canvas>
+            </div>
+            <!-- <p><a  id="view_graph" style="cursor: pointer;">View More</a></p> -->
+          </div>
+        </div>
+
+        <div class="col-md-12 mt-3">
+          <div class="card" style="padding: 15px">
+            <h4 style="cursor: pointer">
+              User Registrations Per Day({{ value }} Registration)
+            </h4>
+            <br />
+            <!-- <canvas id="LineChart"></canvas> -->
+
+            <canvasjs-chart
+              *ngIf="bargraph"
+              [options]="chartoption2"
+              [styles]="{ width: '100%', height: '360px' }"
+            ></canvasjs-chart>
+          </div>
+        </div>
+      </div>
+
+   
+          <div class="row" *ngIf="!isMobileView && !userPermissions.view">
+            <div class="col-md-12 text-center">
+              <img src="assets/UIComponents/images/index/global justice summit.png" alt="logo" class="col-3">
+            </div>
+          </div>
+        
+      <div class="row" *ngIf="isMobileView  && !userPermissions.view">
+        <div class="col-md-12 text-center">
+          <img src="assets/UIComponents/images/index/global justice summit.png" alt="logo" class="col-6">
+        </div>
+      </div>
+    </div>
+  </div>
+  <!------------------------------------------- Page Content end ----------------------------------------->
+</div>
+
+
+     

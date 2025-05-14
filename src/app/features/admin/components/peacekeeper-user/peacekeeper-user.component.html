@@ -119,6 +119,8 @@
                         <i class="bi bi-caret-up-fill" *ngIf="sortBy === 'coupon_code' && order === 'asc'"></i>
                         <i class="bi bi-caret-down-fill" *ngIf="sortBy === 'coupon_code' && order === 'desc'"></i>
                       </th>
+                      <th>Reference</th>
+                      <th>Payment Status</th>
                       <th>Image</th>
                       <th>QR URL</th>
                       <th (click)="onSort('created_at')" [ngStyle]="sortBy === 'created_at'?{'cursor': 'pointer'}:{}">
@@ -151,6 +153,8 @@
                       <td>{{all.Id_no}}</td>
                       <td>{{all.coupon_discount}}{{all.coupon_discount?'%':''}}</td>
                       <td>{{all.coupon_code}}</td>
+                      <td>{{all.reference_code}}</td>
+                      <td>{{all.status}}</td>
                       <td class="p-0"><img class="p-1" [src]="all.file_name" style="cursor: pointer;"
                           (click)="openImage(all.file_name)" width="50px" alt=""></td>
                       <td tooltip="{{all.QR_CODE}}" [options]="myOptions" style="
